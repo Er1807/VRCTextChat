@@ -19,6 +19,7 @@ wss.on('connection', function connection(ws) {
 
     ws.on('message', function incoming(message) {
         message = message.toString('utf8').trim();
+        console.log(message);
         try {
             var args = message.split(" ");
             switch (args[0]) {
