@@ -4,16 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4AD9CAFD-65DE-41EA-A8C9-22F3B41CE2D3}</ProjectGuid>
+    <ProjectGuid>{540D7098-EDA4-4247-8BF0-211DC96DF6C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TextChat</RootNamespace>
-    <AssemblyName>TextChat</AssemblyName>
+    <RootNamespace>WSConnectionLibary</RootNamespace>
+    <AssemblyName>WSConnectionLibary</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,25 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ActionMenuApi">
-      <HintPath>F:\Steam\steamapps\common\VRChat\Mods\ActionMenuApi.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Il2Cppmscorlib">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\Il2Cppmscorlib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="MelonLoader">
       <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,52 +48,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnhollowerBaseLib">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnhollowerRuntimeLib">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnhollowerRuntimeLib.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.AnimationModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="VRCCore-Standalone">
       <HintPath>F:\Steam\steamapps\common\VRChat\MelonLoader\Managed\VRCCore-Standalone.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="VRChatUtilityKit">
-      <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRChatUtilityKit.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TextChat.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="TextChat.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WSConnectionLibary\WSConnectionLibary.csproj">
-      <Project>{540d7098-eda4-4247-8bf0-211dc96df6c3}</Project>
-      <Name>WSConnectionLibary</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,6 +16,7 @@ using UnhollowerRuntimeLib;
 using Il2CppSystem.Collections.Generic;
 using VRChatUtilityKit.Components;
 using System.Collections;
+using WSConnectionLibary;
 
 [assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
@@ -27,29 +28,40 @@ namespace TextChat
     public class TextChatMod : MelonMod
     {
         Client client;
-        private bool connected = false;
         private SingleButton button;
 
         GameObject menu;
         public override void OnApplicationStart()
         {
-            client = new Client("ws://localhost:8080");
-            VRCActionMenuPage.AddButton(ActionMenuPage.Main,"SetUserID", () => client.SetUserID());
+
             
             MelonLogger.Msg($"Actionmenu initialised");
-
-            client.MessageRecieved += async (userid, message) => {
-                MelonLogger.Msg($"Recieved message from {userid}, with coontent {message}");
-                await AsyncUtils.YieldToMainThread();
-                UiManager.OpenSmallPopup($"Message recieved from {userid}", message, "OK", new Action(() => { }));
-                
-            };
-            client.OnlineRecieved += (userid, online) => { 
-                    if(VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
-                        button.ButtonComponent.interactable = true;
-            };
+            MelonCoroutines.Start(LoadClient());
+            
             VRCUtils.OnUiManagerInit += Init;
         }
+
+        public IEnumerator LoadClient()
+        {
+            while (!Client.ClientAvailable())
+                yield return null;
+            
+
+            client = Client.GetClient();
+
+            client.RegisterEvent("SendMessageTo", async (msg) => {
+                MelonLogger.Msg($"Recieved message from {msg.Target}, with coontent {msg.Content}");
+                await AsyncUtils.YieldToMainThread();
+                UiManager.OpenSmallPopup($"Message recieved from {msg.Target}", msg.Content, "OK", new Action(() => { }));
+
+            });
+
+            client.OnlineRecieved += (userid, online) => {
+                if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
+                    button.ButtonComponent.interactable = true;
+            };
+        }
+
 
 
 
@@ -81,16 +93,19 @@ namespace TextChat
         private void RunOnlineCheck()
         {
             button.ButtonComponent.interactable = false;
-            MelonCoroutines.Start(DelyedCheck());
+            MelonCoroutines.Start(DelayedCheck());
         }
 
-        public IEnumerator DelyedCheck()
+        public IEnumerator DelayedCheck()
         {
             yield return null;
-
             client.IsUserOnline(VRCUtils.ActiveUserInUserInfoMenu.id);
         }
 
+        public void SendMessageTo(string userID, string message)
+        {
+            client.Send(new Message() { Method = "SendMessageTo", Target = userID, Content = message });
+        }
         private void GetMessage(string id)
         {
             //https://github.com/Er1807/VRChatVibratorController/blob/main/VRChatVibratorController/VibratorController.cs#L214
@@ -98,7 +113,7 @@ namespace TextChat
                 DelegateSupport.ConvertDelegate<Il2CppSystem.Action<string, List<KeyCode>, Text>>(
                         (Action<string, List<KeyCode>, Text>)delegate (string message, List<KeyCode> k, Text t)
                         {
-                            client.SendMessageTo(id, message);
+                            SendMessageTo(id, message);
                         }), new Action(() => { }));
         }
 
