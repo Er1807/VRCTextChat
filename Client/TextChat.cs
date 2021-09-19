@@ -3,14 +3,8 @@ using TextChat;
 using MelonLoader;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using VRChatUtilityKit.Ui;
 using VRChatUtilityKit.Utilities;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
 using UnityEngine.UI;
 using UnhollowerRuntimeLib;
 using Il2CppSystem.Collections.Generic;
@@ -33,8 +27,6 @@ namespace TextChat
         GameObject menu;
         public override void OnApplicationStart()
         {
-
-            
             MelonLogger.Msg($"Actionmenu initialised");
             MelonCoroutines.Start(LoadClient());
             
@@ -45,12 +37,13 @@ namespace TextChat
         {
             while (!Client.ClientAvailable())
                 yield return null;
-            
+
+            MelonLogger.Msg($"Client Available");
 
             client = Client.GetClient();
 
             client.RegisterEvent("SendMessageTo", async (msg) => {
-                MelonLogger.Msg($"Recieved message from {msg.Target}, with coontent {msg.Content}");
+                MelonLogger.Msg($"Recieved message from {msg.Target}, with content {msg.Content}");
                 await AsyncUtils.YieldToMainThread();
                 UiManager.OpenSmallPopup($"Message recieved from {msg.Target}", msg.Content, "OK", new Action(() => { }));
 
@@ -60,6 +53,8 @@ namespace TextChat
                 if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
                     button.ButtonComponent.interactable = true;
             };
+
+            MelonLogger.Msg($"Setup Client");
         }
 
 

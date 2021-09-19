@@ -30,12 +30,12 @@ namespace WSConnectionLibary
         }
     }
 
-    public class WSConnectionLibaryMod :MelonMod
+    public class WSConnectionLibaryMod : MelonMod
     {
         public override void OnApplicationStart()
         {
             var category = MelonPreferences.CreateCategory("WSConnectionLibary");
-            MelonPreferences_Entry<string> entry =  category.CreateEntry("Server", "ws://localhost:8080/VRC");
+            MelonPreferences_Entry<string> entry =  category.CreateEntry("Server", "wss://vrcws.er1807.de/VRC");
             entry.OnValueChanged += (oldValue, newValue) => { Client.GetClient().Connect(newValue); };
             Client.GetClient().Connect(entry.Value);
         }
@@ -87,17 +87,18 @@ namespace WSConnectionLibary
             }
 
             ws = new ClientWebSocket();
-            Task.Run(async () => {
-                await ws.ConnectAsync(new Uri(server), CancellationToken.None);
-                MelonCoroutines.Start(SetUserID());
-                MelonLogger.Msg($"Connected to {server}");
+            ws.ConnectAsync(new Uri(server), CancellationToken.None).Wait();
+            Task.Run(() => {
                 Recieve();
             });
+            MelonCoroutines.Start(SetUserID());
+            MelonLogger.Msg($"Connected to {server}");
         }
 
         //https://forum.unity.com/threads/solved-dictionary-of-delegate-such-that-each-value-hold-multiple-methods.506880/
         public void RegisterEvent(string method, MessageEvent e)
         {
+            MelonLogger.Msg($"Registering Event {method}");
             MessageEvent EventStored;
             if (Methods.TryGetValue(method, out EventStored))
             {
@@ -147,40 +148,47 @@ namespace WSConnectionLibary
         }
         private async void Recieve()
         {
-            const int maxMessageSize = 1024;
-            byte[] receiveBuffer = new byte[maxMessageSize];
-            while (ws.State == WebSocketState.Open)
+            try
             {
-                WebSocketReceiveResult receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
-                if (receiveResult.MessageType == WebSocketMessageType.Text)
+                const int maxMessageSize = 1024;
+                byte[] receiveBuffer = new byte[maxMessageSize];
+                while (ws.State == WebSocketState.Open)
                 {
-                    var receivedString = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
-                    MelonLogger.Msg(receivedString);
-                    Message msg = JsonConvert.DeserializeObject<Message>(receivedString);
-                    MessageRecieved?.Invoke(msg);
-                    if (msg.Method == "OnlineStatus")
+                    WebSocketReceiveResult receiveResult = await ws.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None);
+                    if (receiveResult.MessageType == WebSocketMessageType.Text)
                     {
-                        OnlineRecieved?.Invoke(msg.Target, msg.Content == "Online");
-                    }
-                    else if (msg.Method == "Error")
-                    {
-                        ErrorRecieved?.Invoke(msg);
-                    }
-                    else if (msg.Method == "MethodsUpdated")
-                    {
-                        //Nothing
-                    }
-                    else if (msg.Method == "Connected")
-                    {
-                        connected = true;
-                        Connected?.Invoke();
-                    }
-                    else
-                    {
-                        if (Methods.ContainsKey(msg.Method))
-                            Methods[msg.Method]?.Invoke(msg);
+                        var receivedString = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
+                        MelonLogger.Msg(receivedString);
+                        Message msg = JsonConvert.DeserializeObject<Message>(receivedString);
+                        MessageRecieved?.Invoke(msg);
+                        if (msg.Method == "OnlineStatus")
+                        {
+                            OnlineRecieved?.Invoke(msg.Target, msg.Content == "Online");
+                        }
+                        else if (msg.Method == "Error")
+                        {
+                            ErrorRecieved?.Invoke(msg);
+                        }
+                        else if (msg.Method == "MethodsUpdated")
+                        {
+                            //Nothing
+                        }
+                        else if (msg.Method == "Connected")
+                        {
+                            connected = true;
+                            Connected?.Invoke();
+                        }
+                        else
+                        {
+                            if (Methods.ContainsKey(msg.Method))
+                                Methods[msg.Method]?.Invoke(msg);
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                MelonLogger.Msg("Reciever errored");
             }
         }
     }

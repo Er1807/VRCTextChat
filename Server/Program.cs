@@ -122,8 +122,9 @@ namespace Server
 
             var wssv = new WebSocketServer("ws://0.0.0.0:8080");
             wssv.AddWebSocketService<VRCWS>("/VRC");
-            wssv.Start();
+            wssv.AllowForwardedRequest = true;
             
+            wssv.Start();
             Console.WriteLine("Listening");
             exitEvent.WaitOne();
             wssv.Stop();
