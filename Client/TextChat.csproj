@@ -103,9 +103,9 @@
     <None Include="TextChat.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WSConnectionLibary\WSConnectionLibary.csproj">
+    <ProjectReference Include="..\VRCWS\VRCWS.csproj">
       <Project>{540d7098-eda4-4247-8bf0-211dc96df6c3}</Project>
-      <Name>WSConnectionLibary</Name>
+      <Name>VRCWS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -8,13 +8,13 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WSConnectionLibary;
+using VRCWS;
 
-[assembly: MelonInfo(typeof(WSConnectionLibaryMod), "WSConnectionLibary", "1.0.0", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(VRCWSLibaryMod), "VRCWSLibary", "1.0.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
 
 
-namespace WSConnectionLibary
+namespace VRCWS
 {
     
 
@@ -30,7 +30,7 @@ namespace WSConnectionLibary
         }
     }
 
-    public class WSConnectionLibaryMod : MelonMod
+    public class VRCWSLibaryMod : MelonMod
     {
         public override void OnApplicationStart()
         {

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat", "TextChat.csproj", "{4AD9CAFD-65DE-41EA-A8C9-22F3B41CE2D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSConnectionLibary", "..\WSConnectionLibary\WSConnectionLibary.csproj", "{540D7098-EDA4-4247-8BF0-211DC96DF6C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCWS", "..\VRCWS\VRCWS.csproj", "{540D7098-EDA4-4247-8BF0-211DC96DF6C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
