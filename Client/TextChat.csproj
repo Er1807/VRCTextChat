@@ -94,6 +94,10 @@
       <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRChatUtilityKit.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="VRCWS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRCWS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TextChat.cs" />
@@ -101,12 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TextChat.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VRCWS\VRCWS.csproj">
-      <Project>{540d7098-eda4-4247-8bf0-211dc96df6c3}</Project>
-      <Name>VRCWS</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
