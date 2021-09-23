@@ -94,9 +94,8 @@
       <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRChatUtilityKit.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="VRCWS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRCWS.dll</HintPath>
+    <Reference Include="VRCWSLibary">
+      <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRCWSLibary.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

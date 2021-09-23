@@ -10,7 +10,7 @@ using UnhollowerRuntimeLib;
 using Il2CppSystem.Collections.Generic;
 using VRChatUtilityKit.Components;
 using System.Collections;
-using VRCWS;
+using VRCWSLibary;
 
 [assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
