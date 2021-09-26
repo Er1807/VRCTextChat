@@ -1,5 +1,4 @@
-﻿using ActionMenuApi.Api;
-using TextChat;
+﻿using TextChat;
 using MelonLoader;
 using System;
 using UnityEngine;
@@ -11,6 +10,7 @@ using Il2CppSystem.Collections.Generic;
 using VRChatUtilityKit.Components;
 using System.Collections;
 using VRCWSLibary;
+using Newtonsoft.Json;
 
 [assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
@@ -18,7 +18,11 @@ using VRCWSLibary;
 namespace TextChat
 {
 
-
+    public class TextMessage
+    {
+        public string Username;
+        public string Message;
+    }
     public class TextChatMod : MelonMod
     {
         Client client;
@@ -45,9 +49,10 @@ namespace TextChat
             client.RegisterEvent("SendMessageTo", async (msg) => {
                 MelonLogger.Msg($"Recieved message from {msg.Target}, with content {msg.Content}");
                 await AsyncUtils.YieldToMainThread();
-                UiManager.OpenSmallPopup($"Message recieved from {msg.Target}", msg.Content, "OK", new Action(() => { }));
+                TextMessage textMsg = msg.GetContentAs<TextMessage >();
+                UiManager.OpenSmallPopup($"Message recieved from {textMsg.Username}", textMsg.Message, "OK", new Action(() => { UiManager.ClosePopup(); }));
 
-            });
+            }, false);
 
             client.OnlineRecieved += (userid, online) => {
                 if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
@@ -73,7 +78,7 @@ namespace TextChat
                             "SendMessageSingleBtn");
 
             button.gameObject.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-            button.gameObject.transform.localPosition = new Vector3(0, -380, 0);
+            button.gameObject.transform.localPosition = new Vector3(615, -90, 0);
 
             EnableDisableListener listener =  menu.AddComponent<EnableDisableListener>();
 
@@ -99,7 +104,7 @@ namespace TextChat
 
         public void SendMessageTo(string userID, string message)
         {
-            client.Send(new Message() { Method = "SendMessageTo", Target = userID, Content = message });
+            client.Send(new Message() { Method = "SendMessageTo", Target = userID, Content = JsonConvert.SerializeObject(new TextMessage() { Username = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_String_0, Message=message }) });
         }
         private void GetMessage(string id)
         {
