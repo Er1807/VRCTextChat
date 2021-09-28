@@ -4,7 +4,7 @@ Requires [VRCWS](https://github.com/Er1807/VRCWS) and [VRChatUtilityKit](https:/
 
 The button to send a message can be found in the user details menu
 To send a message that the other user is trusting you. A guide for it can be found here [Trusting](https://github.com/Er1807/VRCWS#trust-another-user).
-The process of trusting can also be seen in this video
+The process of trusting can also be seen in this video. Once trust is established you can recieve message from that user at any time
 
 https://user-images.githubusercontent.com/20169013/135122563-bf73232f-c5b3-48c7-806e-f2e3ebf2795b.mp4
 
