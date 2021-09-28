@@ -11,6 +11,7 @@ using VRChatUtilityKit.Components;
 using System.Collections;
 using VRCWSLibary;
 using Newtonsoft.Json;
+using UnityEngine.Events;
 
 [assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
@@ -26,9 +27,9 @@ namespace TextChat
     public class TextChatMod : MelonMod
     {
         Client client;
-        private SingleButton button;
+        private Button button;
+        private GameObject menu;
 
-        GameObject menu;
         public override void OnApplicationStart()
         {
             MelonLogger.Msg($"Actionmenu initialised");
@@ -56,7 +57,7 @@ namespace TextChat
 
             client.OnlineRecieved += (userid, online) => {
                 if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
-                    button.ButtonComponent.interactable = true;
+                    button.interactable = true;
             };
 
             MelonLogger.Msg($"Setup Client");
@@ -68,21 +69,26 @@ namespace TextChat
         private void Init()
         {
             menu = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/");
+            var baseUIElement = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn/PlaylistsButton").gameObject;
 
-            button = new SingleButton(menu,
-                            new Vector3(3, 4), "Send\r\nMessage", delegate
-                            {
-                                GetMessage(VRCUtils.ActiveUserInUserInfoMenu.id);
-                            },
-                            "Send Message to user",
-                            "SendMessageSingleBtn");
+            var gameObject = GameObject.Instantiate(baseUIElement, baseUIElement.transform.parent, true);
+            gameObject.name = "Send_Message";
 
-            button.gameObject.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-            button.gameObject.transform.localPosition = new Vector3(615, -90, 0);
+            var uitext = gameObject.GetComponentInChildren<Text>();
+            uitext.text = "Send Message";
 
-            EnableDisableListener listener =  menu.AddComponent<EnableDisableListener>();
+            button = gameObject.GetComponent<Button>();
+            button.onClick = new Button.ButtonClickedEvent();
+            var action = new Action(delegate () {
+                GetMessage(VRCUtils.ActiveUserInUserInfoMenu.id);
+            });
+            button.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(action));
+
+
+            EnableDisableListener listener = menu.AddComponent<EnableDisableListener>();
 
             listener.OnEnableEvent += () => { RunOnlineCheck(); };
+
             MelonLogger.Msg("Buttons sucessfully created");
         }
 
@@ -92,7 +98,7 @@ namespace TextChat
 
         private void RunOnlineCheck()
         {
-            button.ButtonComponent.interactable = false;
+            button.interactable = false;
             MelonCoroutines.Start(DelayedCheck());
         }
 
