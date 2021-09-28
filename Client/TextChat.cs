@@ -15,6 +15,7 @@ using UnityEngine.Events;
 
 [assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.1", "Eric van Fandenfart")]
 [assembly: MelonGame]
+[assembly: MelonAdditionalDependencies("VRChatUtilityKit")]
 
 namespace TextChat
 {
