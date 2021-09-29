@@ -13,9 +13,9 @@ using VRCWSLibary;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.1", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.2", "Eric van Fandenfart")]
 [assembly: MelonGame]
-[assembly: MelonAdditionalDependencies("VRChatUtilityKit")]
+[assembly: MelonAdditionalDependencies("VRChatUtilityKit", "VRCWSLibary")]
 
 namespace TextChat
 {
@@ -56,8 +56,8 @@ namespace TextChat
 
             }, false);
 
-            client.OnlineRecieved += (userid, online) => {
-                if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && online)
+            client.MethodCheckResponseRecieved += (userid, method, accept) => {
+                if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && method == "SendMessageTo" && accept)
                     button.interactable = true;
             };
 
@@ -88,7 +88,7 @@ namespace TextChat
 
             EnableDisableListener listener = menu.AddComponent<EnableDisableListener>();
 
-            listener.OnEnableEvent += () => { RunOnlineCheck(); };
+            listener.OnEnableEvent += () => { RunMethodCheck(); };
 
             MelonLogger.Msg("Buttons sucessfully created");
         }
@@ -97,7 +97,7 @@ namespace TextChat
 
         
 
-        private void RunOnlineCheck()
+        private void RunMethodCheck()
         {
             button.interactable = false;
             MelonCoroutines.Start(DelayedCheck());
@@ -106,7 +106,7 @@ namespace TextChat
         public IEnumerator DelayedCheck()
         {
             yield return null;
-            client.IsUserOnline(VRCUtils.ActiveUserInUserInfoMenu.id);
+            client.DoesUserAcceptMethod(VRCUtils.ActiveUserInUserInfoMenu.id, "SendMessageTo");
         }
 
         public void SendMessageTo(string userID, string message)

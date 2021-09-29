@@ -96,6 +96,7 @@
     </Reference>
     <Reference Include="VRCWSLibary">
       <HintPath>F:\Steam\steamapps\common\VRChat\Mods\VRCWSLibary.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
