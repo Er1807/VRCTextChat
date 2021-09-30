@@ -13,7 +13,7 @@ using VRCWSLibary;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.2", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.3", "Eric van Fandenfart")]
 [assembly: MelonGame]
 [assembly: MelonAdditionalDependencies("VRChatUtilityKit", "VRCWSLibary")]
 
@@ -56,7 +56,7 @@ namespace TextChat
 
             }, false);
 
-            client.MethodCheckResponseRecieved += (userid, method, accept) => {
+            client.MethodCheckResponseRecieved += (method, userid, accept) => {
                 if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && method == "SendMessageTo" && accept)
                     button.interactable = true;
             };
