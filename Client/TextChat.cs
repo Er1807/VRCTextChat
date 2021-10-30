@@ -12,8 +12,9 @@ using System.Collections;
 using VRCWSLibary;
 using Newtonsoft.Json;
 using UnityEngine.Events;
+using System.Threading.Tasks;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.3", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.4", "Eric van Fandenfart")]
 [assembly: MelonGame]
 [assembly: MelonAdditionalDependencies("VRChatUtilityKit", "VRCWSLibary")]
 
@@ -88,25 +89,28 @@ namespace TextChat
 
             EnableDisableListener listener = menu.AddComponent<EnableDisableListener>();
 
-            listener.OnEnableEvent += () => { RunMethodCheck(); };
+            listener.OnEnableEvent += () => MelonCoroutines.Start(DelayedCheck());
 
             MelonLogger.Msg("Buttons sucessfully created");
         }
 
-       
-
-        
-
-        private void RunMethodCheck()
-        {
-            button.interactable = false;
-            MelonCoroutines.Start(DelayedCheck());
-        }
-
         public IEnumerator DelayedCheck()
         {
+            button.interactable = false;
             yield return null;
-            client.DoesUserAcceptMethod(VRCUtils.ActiveUserInUserInfoMenu.id, "SendMessageTo");
+            Task.Run(async() => {
+                try
+                {
+                    bool response = await client.DoesUserAcceptMethodAsyncResponse(VRCUtils.ActiveUserInUserInfoMenu.id, "SendMessageTo");
+
+                    button.interactable = response;
+                }
+                catch (TimeoutException)
+                {
+                    MelonLogger.Msg("Didnt recieve a valid response in time");
+                }
+                
+            });
         }
 
         public void SendMessageTo(string userID, string message)
