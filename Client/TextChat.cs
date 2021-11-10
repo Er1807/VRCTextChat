@@ -13,8 +13,9 @@ using VRCWSLibary;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 using System.Threading.Tasks;
+using VRC.UI;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.0.4", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.1.0", "Eric van Fandenfart")]
 [assembly: MelonGame]
 [assembly: MelonAdditionalDependencies("VRChatUtilityKit", "VRCWSLibary")]
 
@@ -58,7 +59,7 @@ namespace TextChat
             }, false);
 
             client.MethodCheckResponseRecieved += (method, userid, accept) => {
-                if (VRCUtils.ActiveUserInUserInfoMenu?.id == userid && method == "SendMessageTo" && accept)
+                if (PageUserInfo.field_Internal_Static_String_1 == userid && method == "SendMessageTo" && accept)
                     button.interactable = true;
             };
 
@@ -82,7 +83,7 @@ namespace TextChat
             button = gameObject.GetComponent<Button>();
             button.onClick = new Button.ButtonClickedEvent();
             var action = new Action(delegate () {
-                GetMessage(VRCUtils.ActiveUserInUserInfoMenu.id);
+                GetMessage(PageUserInfo.field_Internal_Static_String_1);
             });
             button.onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(action));
 
@@ -101,7 +102,7 @@ namespace TextChat
             Task.Run(async() => {
                 try
                 {
-                    bool response = await client.DoesUserAcceptMethodAsyncResponse(VRCUtils.ActiveUserInUserInfoMenu.id, "SendMessageTo");
+                    bool response = await client.DoesUserAcceptMethodAsyncResponse(PageUserInfo.field_Internal_Static_String_1, "SendMessageTo");
 
                     button.interactable = response;
                 }
@@ -115,7 +116,7 @@ namespace TextChat
 
         public void SendMessageTo(string userID, string message)
         {
-            client.Send(new Message() { Method = "SendMessageTo", Target = userID, Content = JsonConvert.SerializeObject(new TextMessage() { Username = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_String_0, Message=message }) });
+            client.Send(new Message() { Method = "SendMessageTo", Target = userID, Content = JsonConvert.SerializeObject(new TextMessage() { Username = VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_String_1, Message=message }) });
         }
         private void GetMessage(string id)
         {
