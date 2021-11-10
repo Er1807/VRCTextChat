@@ -1,8 +1,8 @@
 {
-  "_id": -1,
+  "_id": 266,
   "name": "TextChat",
-  "modversion": "1.0.3",
-  "vrchatversion": "1133",
+  "modversion": "1.1.0",
+  "vrchatversion": "1149",
   "loaderversion": "v0.4.3 Open-Beta",
   "modtype": "Mod",
   "author": "Eric van Fandenfart",
@@ -14,8 +14,8 @@
     "[VRCWS](https://github.com/Er1807/VRCWS)",
     "[VRChatUtilityKit](https://github.com/loukylor/VRC-Mods/tree/main/VRChatUtilityKit)"
   ],
-  "downloadlink": "https://github.com/Er1807/VRCTextChat/releases/download/v1.0.3/TextChat.dll",
+  "downloadlink": "https://github.com/Er1807/VRCTextChat/releases/download/v1.1.0/TextChat.dll",
   "sourcelink": "https://github.com/Er1807/VRCTextChat",
-  "changelog": "-",
+  "changelog": "Update for 1149",
   "embedcolor": "7F60CA"
 }
