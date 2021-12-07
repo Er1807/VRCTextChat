@@ -57,7 +57,7 @@ namespace TextChat
                 MelonLogger.Msg($"Recieved message from {msg.Target}, with content {msg.Content}");
                 AsyncUtilsVRCWS.ToMain(() => {
                     TextMessage textMsg = msg.GetContentAs<TextMessage>();
-                    openMessageBox.Invoke(VRCUiPopupManager.prop_VRCUiPopupManager_0, new object[] { $"Message recieved from {textMsg.Username}", textMsg.Message, "OK", new Action(() => { VRCUiManager.prop_VRCUiManager_0.HideScreen("POPUP"); }), null });
+                    openMessageBox.Invoke(VRCUiPopupManager.prop_VRCUiPopupManager_0, new object[] { $"Message recieved from {textMsg.Username}", textMsg.Message, "OK", (Il2CppSystem.Action)new Action(() => { VRCUiManager.prop_VRCUiManager_0.HideScreen("POPUP"); }), (Action<VRCUiPopup>)null });
 
                 });
 
@@ -76,7 +76,8 @@ namespace TextChat
             return typeof(VRCUiPopupManager)
                 .GetMethods()
                 .Where(x => x.Name.StartsWith("Method_Public_Void_String_String_String_Action_Action_1_VRCUiPopup"))
-                .Where(x=> XrefScanner.XrefScan(x).Any(y => y.Type == XrefType.Global && y.ReadAsObject().ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2")).SingleOrDefault();
+                .Where(x => XrefScanner.XrefScan(x).Any(y => y.Type == XrefType.Global && y.ReadAsObject().ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2"))
+                .Where(x => XrefScanner.UsedBy(x).Any(y => y.Type == XrefType.Method && y.TryResolve().DeclaringType.Name == "VRCSearchableUiPage")).SingleOrDefault();
             
                 
             
