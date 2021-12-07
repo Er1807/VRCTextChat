@@ -76,7 +76,7 @@ namespace TextChat
             return typeof(VRCUiPopupManager)
                 .GetMethods()
                 .Where(x => x.Name.StartsWith("Method_Public_Void_String_String_String_Action_Action_1_VRCUiPopup"))
-                .Where(x=> XrefScanner.XrefScan(x).Any(y => y.ReadAsObject().ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2")).SingleOrDefault();
+                .Where(x=> XrefScanner.XrefScan(x).Any(y => y.Type == XrefType.Global && y.ReadAsObject().ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2")).SingleOrDefault();
             
                 
             
