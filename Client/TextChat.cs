@@ -2,22 +2,23 @@
 using MelonLoader;
 using System;
 using UnityEngine;
-using VRChatUtilityKit.Ui;
-using VRChatUtilityKit.Utilities;
 using UnityEngine.UI;
 using UnhollowerRuntimeLib;
 using Il2CppSystem.Collections.Generic;
-using VRChatUtilityKit.Components;
 using System.Collections;
 using VRCWSLibary;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 using VRC.UI;
+using UnhollowerRuntimeLib.XrefScans;
+using System.Linq;
+using System.Reflection;
+using UnhollowerBaseLib.Attributes;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.1.0", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.1.1", "Eric van Fandenfart")]
 [assembly: MelonGame]
-[assembly: MelonAdditionalDependencies("VRChatUtilityKit", "VRCWSLibary")]
+[assembly: MelonAdditionalDependencies("VRCWSLibary")]
 
 namespace TextChat
 {
@@ -33,12 +34,15 @@ namespace TextChat
         private Button button;
         private GameObject menu;
 
+        private MethodInfo openMessageBox;
+
         public override void OnApplicationStart()
         {
             MelonLogger.Msg($"Actionmenu initialised");
+            openMessageBox = FindPopupMethod();
             MelonCoroutines.Start(LoadClient());
-            
-            VRCUtils.OnUiManagerInit += Init;
+
+            MelonCoroutines.Start(WaitForUIInit());
         }
 
         public IEnumerator LoadClient()
@@ -49,12 +53,13 @@ namespace TextChat
             MelonLogger.Msg($"Client Available");
 
             client = Client.GetClient();
-
-            client.RegisterEvent("SendMessageTo", async (msg) => {
+            client.RegisterEvent("SendMessageTo", (msg) => {
                 MelonLogger.Msg($"Recieved message from {msg.Target}, with content {msg.Content}");
-                await AsyncUtils.YieldToMainThread();
-                TextMessage textMsg = msg.GetContentAs<TextMessage >();
-                UiManager.OpenSmallPopup($"Message recieved from {textMsg.Username}", textMsg.Message, "OK", new Action(() => { UiManager.ClosePopup(); }));
+                AsyncUtilsVRCWS.ToMain(() => {
+                    TextMessage textMsg = msg.GetContentAs<TextMessage>();
+                    openMessageBox.Invoke(VRCUiPopupManager.prop_VRCUiPopupManager_0, new object[] { $"Message recieved from {textMsg.Username}", textMsg.Message, "OK", new Action(() => { VRCUiManager.prop_VRCUiManager_0.HideScreen("POPUP"); }), null });
+
+                });
 
             }, false);
 
@@ -66,11 +71,25 @@ namespace TextChat
             MelonLogger.Msg($"Setup Client");
         }
 
-
-
-
-        private void Init()
+        private MethodInfo FindPopupMethod()
         {
+            return typeof(VRCUiPopupManager)
+                .GetMethods()
+                .Where(x => x.Name.StartsWith("Method_Public_Void_String_String_String_Action_Action_1_VRCUiPopup"))
+                .Where(x=> XrefScanner.XrefScan(x).Any(y => y.ReadAsObject().ToString() == "UserInterface/MenuContent/Popups/StandardPopupV2")).SingleOrDefault();
+            
+                
+            
+        }
+
+
+        private IEnumerator WaitForUIInit()
+        {
+            while (VRCUiManager.prop_VRCUiManager_0 == null)
+                yield return null;
+            while (GameObject.Find("UserInterface").transform.Find("Canvas_QuickMenu(Clone)/Container/Window/QMParent") == null)
+                yield return null;
+
             menu = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/");
             var baseUIElement = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo/Buttons/RightSideButtons/RightUpperButtonColumn/PlaylistsButton").gameObject;
 
@@ -129,5 +148,19 @@ namespace TextChat
                         }), new Action(() => { }));
         }
 
+    }
+
+    //https://github.com/loukylor/VRC-Mods/blob/VRCUK-1.1.0/VRChatUtilityKit/Components/EnableDisableListener.cs
+    [RegisterTypeInIl2Cpp]
+    public class EnableDisableListener : MonoBehaviour
+    {
+        [method: HideFromIl2Cpp]
+        public event Action OnEnableEvent;
+        [method: HideFromIl2Cpp]
+        public event Action OnDisableEvent;
+        public EnableDisableListener(IntPtr obj0) : base(obj0) { }
+
+        internal void OnEnable() => OnEnableEvent?.Invoke();
+        internal void OnDisable() => OnDisableEvent?.Invoke();
     }
 }
