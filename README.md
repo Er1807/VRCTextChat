@@ -1,6 +1,6 @@
 # VRCTextChat
 
-Requires [VRCWS](https://github.com/Er1807/VRCWS) and [VRChatUtilityKit](https://github.com/loukylor/VRC-Mods/tree/main/VRChatUtilityKit)
+Requires [VRCWS](https://github.com/Er1807/VRCWS) and [UIExpansionKit](https://github.com/knah/VRCMods#ui--kit)
 
 The button to send a message can be found in the user details menu
 To send a message that the other user is trusting you. A guide for it can be found here [Trusting](https://github.com/Er1807/VRCWS#trust-another-user).
