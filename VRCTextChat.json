@@ -1,8 +1,8 @@
 {
   "_id": 266,
   "name": "TextChat",
-  "modversion": "1.1.1",
-  "vrchatversion": "1149",
+  "modversion": "1.1.2",
+  "vrchatversion": "1160",
   "loaderversion": "v0.4.3 Open-Beta",
   "modtype": "Mod",
   "author": "Eric van Fandenfart",
@@ -11,10 +11,11 @@
     "Chat", "VRCWS"
   ],
   "requirements": [
-    "[VRCWS](https://github.com/Er1807/VRCWS)"
+    "[VRCWS](https://github.com/Er1807/VRCWS)",
+    "[UIExpansionKit](https://github.com/knah/VRCMods#ui--kit)"
   ],
-  "downloadlink": "https://github.com/Er1807/VRCTextChat/releases/download/v1.1.1/TextChat.dll",
+  "downloadlink": "https://github.com/Er1807/VRCTextChat/releases/download/v1.1.2/TextChat.dll",
   "sourcelink": "https://github.com/Er1807/VRCTextChat",
-  "changelog": "Fixed Crash upon receiving a message",
+  "changelog": "Fixed MessageBox Error",
   "embedcolor": "7F60CA"
 }
