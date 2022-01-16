@@ -17,7 +17,7 @@ using System.Reflection;
 using UIExpansionKit.API;
 using UnhollowerBaseLib.Attributes;
 
-[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.1.1", "Eric van Fandenfart")]
+[assembly: MelonInfo(typeof(TextChatMod), "TextChat", "1.1.2", "Eric van Fandenfart")]
 [assembly: MelonGame]
 [assembly: MelonAdditionalDependencies("VRCWSLibary", "UIExpansionKit")]
 
